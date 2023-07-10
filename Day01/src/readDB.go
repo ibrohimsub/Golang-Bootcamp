@@ -46,7 +46,10 @@ func (r XMLReader) ReadDatabase() ([]Cake, error) {
 	}
 	defer xmlFile.Close()
 
-	byteValue, _ := ioutil.ReadAll(xmlFile)
+	byteValue, err := ioutil.ReadAll(xmlFile)
+	if err != nil {
+		return nil, err
+	}
 
 	var recipes struct {
 		Cakes []Cake `xml:"cake"`
@@ -68,7 +71,10 @@ func (r JSONReader) ReadDatabase() ([]Cake, error) {
 	}
 	defer jsonFile.Close()
 
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+	byteValue, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		return nil, err
+	}
 
 	var recipes struct {
 		Cakes []Cake `json:"cake"`
@@ -129,5 +135,8 @@ func main() {
 
 func getFileExtension(filename string) string {
 	parts := strings.Split(filename, ".")
-	return parts[len(parts)-1]
+	if len(parts) > 1 {
+		return parts[len(parts)-1]
+	}
+	return ""
 }
